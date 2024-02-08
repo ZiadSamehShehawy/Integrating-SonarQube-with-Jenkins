@@ -1,12 +1,11 @@
 pipeline {
     agent any
-    tools {
+    tools{
         maven 'jenkins-maven'
-
     }
 
     stages {
-        stage('Checkout the code') {
+        stage('checkout the code') {
             steps {
                 git url: 'https://github.com/ZiadSamehShehawy/Integrating-SonarQube-with-Jenkins.git', branch: 'master'
             }
@@ -16,34 +15,25 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
-       stage('SonarQube Test') {
-    steps {
-        withSonarQubeEnv(installationName: 'sonarqube', credentialsId: 'sonarqube') {
-            script {
-                def scannerHome = tool 'sq1'
-                withEnv(["PATH+MAVEN=${tool 'jenkins-maven'}/bin",
-                         "PATH+SCANNER=${scannerHome}/bin",
-                         "M2_HOME=${tool 'jenkins-maven'}"]) {
-                    sh 'mvn clean package sonar:sonar'
-                }
-            }
-        }
-    }
-}
-
+        stage('Sonarqube Test') {
+            steps {
+              withSonarQubeEnv(installationName: 'sonarqube', credentialsId: 'sonarqube') {
+                sh 'mvn sonar:sonar'
+				}
+			}
+		}
         stage("Quality Gate") {
             steps {
-                timeout(time: 20, unit: 'SECONDS') {
-                    script {
-                        waitForQualityGate abortPipeline: true
-                    }
-                }
-            }
+              timeout(time: 20, unit: 'SECONDS') {
+                waitForQualityGate abortPipeline: true
         }
+     }
+     }
         stage('Deploy') {
             steps {
                 sh 'java -jar target/my-app-1.0-SNAPSHOT.jar'
             }
         }
-    }
-}
+	
+	}
+	}
