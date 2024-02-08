@@ -1,11 +1,11 @@
 pipeline {
     agent any
-    tools{
+    tools {
         maven 'jenkins_maven'
     }
 
     stages {
-        stage('checkout the code') {
+        stage('Checkout the code') {
             steps {
                 git url: 'https://github.com/ZiadSamehShehawy/Integrating-SonarQube-with-Jenkins.git', branch: 'master'
             }
@@ -15,25 +15,26 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
-        stage('Sonarqube Test') {
+        stage('SonarQube Test') {
             steps {
-              withSonarQubeEnv(installationName: 'sonarqube', credentialsId: 'sonarqube') {
-                sh 'mvn sonar:sonar'
-				}
-			}
-		}
+                withSonarQubeEnv(installationName: 'sonarqube', credentialsId: 'sonarqube') {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
         stage("Quality Gate") {
             steps {
-              timeout(time: 20, unit: 'SECONDS') {
-                waitForQualityGate abortPipeline: true
+                timeout(time: 20, unit: 'SECONDS') {
+                    script {
+                        waitForQualityGate abortPipeline: true
+                    }
+                }
+            }
         }
-     }
-     }
         stage('Deploy') {
             steps {
                 sh 'java -jar target/my-app-1.0-SNAPSHOT.jar'
             }
         }
-	
-	}
-	}
+    }
+}
