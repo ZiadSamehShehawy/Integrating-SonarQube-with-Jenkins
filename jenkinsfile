@@ -16,13 +16,21 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
-        stage('SonarQube Test') {
-            steps {
-                withSonarQubeEnv(installationName: 'sonarqube', credentialsId: 'sonarqube') {
-                    sh 'mvn sonar:sonar'
+       stage('SonarQube Test') {
+    steps {
+        withSonarQubeEnv(installationName: 'sonarqube', credentialsId: 'sonarqube') {
+            script {
+                def scannerHome = tool 'sq1'
+                withEnv(["PATH+MAVEN=${tool 'jenkins-maven'}/bin",
+                         "PATH+SCANNER=${scannerHome}/bin",
+                         "M2_HOME=${tool 'jenkins-maven'}"]) {
+                    sh 'mvn clean package sonar:sonar'
                 }
             }
         }
+    }
+}
+
         stage("Quality Gate") {
             steps {
                 timeout(time: 20, unit: 'SECONDS') {
