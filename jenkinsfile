@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('checkout the code') {
             steps {
-                git url: 'https://github.com/ahmedtawfeek/java_app.git', branch: 'master'
+                git url: 'https://github.com/ZiadSamehShehawy/Integrating-SonarQube-with-Jenkins.git', branch: 'master'
             }
         }
         stage('Build The Code') {
@@ -17,7 +17,7 @@ pipeline {
         }
         stage('Sonarqube Test') {
             steps {
-              withSonarQubeEnv(installationName: 'sq1', credentialsId: 'sonarqube') {
+              withSonarQubeEnv(installationName: 'sonarqube', credentialsId: 'sonarqube') {
                 sh 'mvn sonar:sonar'
 				}
 			}
