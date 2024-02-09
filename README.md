@@ -1,10 +1,10 @@
 ## Integrating SonarQube with Jenkins
 
-This guide walks you through the process of integrating SonarQube with Jenkins and setting up a simple pipeline for testing.
+This comprehensive guide will walk you through the process of seamlessly integrating SonarQube with Jenkins while establishing a straightforward pipeline for testing.
 
 ### 1. Create a Jenkins Container
 
-Run the following Docker commands to create a Jenkins container:
+Initiate the creation of a Jenkins container by executing the following Docker commands:
 
 ```bash
 docker network create jenkins
@@ -13,7 +13,7 @@ docker run -it -d --name jenkins --network jenkins -p 8080:8080 -p 50000:50000 -
 
 ### 2. Create a SonarQube Container
 
-Run the following Docker command to create a SonarQube container:
+Execute the subsequent Docker command to generate a SonarQube container:
 
 ```bash
 docker run --network=jenkins -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube
@@ -38,12 +38,16 @@ docker run --network=jenkins -d --name sonarqube -p 9000:9000 -p 9092:9092 sonar
 1. Navigate to Manage Jenkins → Plugins → Available Plugins.
 2. Search for "SonarQube Scanner for Jenkins" and install the plugin.
 
-### 7. Configure SonarQube on Jenkins
+### 7. Add the Sonarqube Credential
+
+Navigate to Manage Jenkins → SonarQube → Add SonarQube.
+
+### 8. Configure SonarQube on Jenkins
 
 1. Navigate to Manage Jenkins → Configure System.
 2. Add SonarQube with a name and server URL.
 
-### 8. Create a Jenkins Pipeline
+### 9. Create a Jenkins Pipeline
 
 1. Navigate to New Item → Pipeline → Pipeline script from SCM.
 2. Choose SCM → GIT and provide the repository URL: (https://github.com/ZiadSamehShehawy/Integrating-SonarQube-with-Jenkins.git).
