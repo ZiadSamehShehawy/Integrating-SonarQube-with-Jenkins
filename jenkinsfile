@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    tools{
+    tools {
         maven 'jenkins-maven'
     }
 
@@ -17,23 +17,36 @@ pipeline {
         }
         stage('Sonarqube Test') {
             steps {
-              withSonarQubeEnv(installationName: 'sonarqube', credentialsId: 'sonarqube') {
-                sh 'mvn sonar:sonar'
-				}
-			}
-		}
+                withSonarQubeEnv(installationName: 'sonarqube', credentialsId: 'sonarqube') {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
         stage("Quality Gate") {
             steps {
-              timeout(time: 20, unit: 'SECONDS') {
-                waitForQualityGate abortPipeline: true
+                timeout(time: 20, unit: 'SECONDS') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
         }
-     }
-     }
         stage('Deploy') {
             steps {
                 sh 'java -jar target/my-app-1.0-SNAPSHOT.jar'
             }
         }
-	
-	}
-	}
+    }
+    post {
+        notBuilt {
+            slackSend channel: '#jenkins-ci', message: "Build notBuilt - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", teamDomain: 'raya-dc', tokenCredentialId: 'slack'
+        }
+        cleanup {
+            slackSend channel: '#jenkins-ci', message: "Build cleanup - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", teamDomain: 'raya-dc', tokenCredentialId: 'slack'
+        }
+        success {
+            slackSend channel: '#jenkins-ci', color: '#439FE0', message: "Build success - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", teamDomain: 'raya-dc', tokenCredentialId: 'slack'
+        }
+        failure {
+            slackSend channel: '#jenkins-ci', message: "Build failed - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", teamDomain: 'raya-dc', tokenCredentialId: 'slack'
+        }
+    }
+}
