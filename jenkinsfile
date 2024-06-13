@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
     tools {
@@ -36,18 +35,7 @@ pipeline {
             }
         }
     }
-    post {
-        // notBuilt {
-            // slackSend channel: '#jenkins-ci', message: "Build notBuilt - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", teamDomain: 'raya-dc', tokenCredentialId: 'slack'
-        // }
-        // cleanup {
-            // slackSend channel: '#jenkins-ci', message: "Build cleanup - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", teamDomain: 'raya-dc', tokenCredentialId: 'slack'
-        // }
-        // success {
-            // slackSend channel: '#jenkins-ci', color: '#439FE0', message: "Build success - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", teamDomain: 'raya-dc', tokenCredentialId: 'slack'
-        // }
-        // failure {
-            // slackSend channel: '#jenkins-ci', message: "Build failed - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", teamDomain: 'raya-dc', tokenCredentialId: 'slack'
-        // }
-    }
+    //post {
+        // 
+    //}
 }
